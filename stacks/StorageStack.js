@@ -9,7 +9,7 @@ export default class StorageStack extends sst.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    this.placeTable = new sst.Table(this, 'PlaceTable', {
+    this.table = new sst.Table(this, 'PlaceTable', {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       fields: {
