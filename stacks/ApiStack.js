@@ -21,11 +21,11 @@ export default class ApiStack extends sst.Stack {
       },
       cors: true,
       routes: {
-        "POST   /places": "src/create.main",
-        "GET    /places/{id}": "src/get.main",
-        "GET    /places": "src/list.main",
-        "PUT    /places/{id}": "src/update.main",
-        "DELETE /places/{id}": "src/delete.main",
+        "POST   /places": "src/places/create.main",
+        "GET    /places/{id}": "src/places/get.main",
+        "GET    /places": "src/places/list.main",
+        "PUT    /places/{id}": "src/places/update.main",
+        "DELETE /places/{id}": "src/places/delete.main",
       },
     });
 

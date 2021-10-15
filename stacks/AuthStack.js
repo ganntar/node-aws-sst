@@ -1,5 +1,7 @@
 //import * as iam from "@aws-cdk/aws-iam";
 import * as sst from "@serverless-stack/resources";
+import * as fs from "fs";
+import { VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 
 export default class AuthStack extends sst.Stack {
   // Public reference to the auth instance
@@ -15,7 +17,15 @@ export default class AuthStack extends sst.Stack {
       cognito: {
         userPool: {
           // Users can login with their email and password
+          //signInAliases: { email: true },
           signInAliases: { email: true },
+          autoVerify: { email: true },
+          selfSignUpEnabled: true,
+          userVerification: {
+            emailStyle: VerificationEmailStyle.CODE ,
+            emailSubject: 'Connect Komeco - Código de verificação',
+            emailBody: fs.readFileSync('./assets/public/templates/email/code/template-email-code.html', 'utf8'),
+          },
         },
       },
     });
