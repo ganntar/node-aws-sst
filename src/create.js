@@ -1,5 +1,7 @@
 import handler from "./util/handler";
 import dynamoDb from "./util/dynamodb";
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
 
 export const main = handler(async (event) => {
   // Request body is passed in as a JSON encoded string in 'event.body'
@@ -9,9 +11,14 @@ export const main = handler(async (event) => {
     Item: {
       // The attributes of the item to be created
       userId: event.requestContext.authorizer.iam.cognitoIdentity.identityId, // The id of the author
-      placeId: data.placeId, // Parsed from request body
-      placeName: data.placeName,
-      createdAt: Date.now(), // Current Unix timestamp
+      placeId: uuidv4(), // Parsed from request body
+      name: data.placeName,
+      devices: data.devices || [],
+      picture: data.picture,
+      status: data.status,
+      typePeople: data.typePeople,
+      createdAt: moment().utc().format(),
+      updatedAt: moment().utc().format(),
     },
   };
 

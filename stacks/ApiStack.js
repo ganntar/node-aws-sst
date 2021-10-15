@@ -19,6 +19,7 @@ export default class ApiStack extends sst.Stack {
           TABLE_NAME: table.tableName,
         },
       },
+      cors: true,
       routes: {
         "POST   /places": "src/create.main",
         "GET    /places/{id}": "src/get.main",
