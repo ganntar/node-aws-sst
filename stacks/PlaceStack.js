@@ -1,23 +1,17 @@
 import * as sst from "@serverless-stack/resources";
 
-export default class ApiStack extends sst.Stack {
-  // Public reference to the API
+export default class PlaceStack extends sst.Stack {
   api;
-
-
 
   constructor(scope, id, props) {
     super(scope, id, props);
 
     const { table } = props;
 
-    // Create the API
     this.api = new sst.Api(this, "Api", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
-        environment: {
-          TABLE_NAME: table.tableName,
-        },
+        environment: { TABLE_NAME: table.tableName },
       },
       cors: true,
       routes: {

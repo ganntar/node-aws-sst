@@ -1,15 +1,15 @@
 import StorageStack from "./StorageStack";
-import ApiStack from "./ApiStack";
+import PlaceStack from "./PlaceStack";
 import AuthStack from "./AuthStack";
 
 export default function main(app) {
   const storageStack = new StorageStack(app, "storage");
 
-  const apiStack = new ApiStack(app, "api", {
-    table: storageStack.table,
+  const placeStack = new PlaceStack(app, "api", {
+    table: storageStack.placeTable,
   });
 
   new AuthStack(app, "auth", {
-    api: apiStack.api
+    api: placeStack.api
   });
 }

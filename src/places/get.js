@@ -2,12 +2,17 @@ import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
+  const filterExpression = "status <> :sts";
+  const expressionAttributeValues = {
+    ":sts": "deleted",
+  };
   const params = {
     TableName: process.env.TABLE_NAME,
-    // 'Key' defines the partition key and sort key of the item to be retrieved
+    FilterExpression: filterExpression,
+    ExpressionAttributeValues: expressionAttributeValues,
     Key: {
-      userId: event.requestContext.authorizer.iam.cognitoIdentity.identityId, // The id of the author
-      placeId: event.pathParameters.id, // The id of the note from the path
+      userId: event.requestContext.authorizer.iam.cognitoIdentity.identityId,
+      placeId: event.pathParameters.id,
     },
   };
 
@@ -16,6 +21,5 @@ export const main = handler(async (event) => {
     throw new Error("Item not found.");
   }
 
-  // Return the retrieved item
   return result.Item;
 });

@@ -2,21 +2,32 @@ import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
+  const KeyConditionExpression = "userId = :uid";
+  const FilterExpression = "#places_status <> :sts";
+
+  const ExpressionAttributeNames = {
+    "#places_status": "status",
+  };
+
+  const ExpressionAttributeValues = {
+    ":uid": event.requestContext.authorizer.iam.cognitoIdentity.identityId,
+    ":sts": "deleted",
+  };
+
   const params = {
     TableName: process.env.TABLE_NAME,
-    // 'KeyConditionExpression' defines the condition for the query
-    // - 'userId = :userId': only return items with matching 'userId'
-    //   partition key
-    KeyConditionExpression: "userId = :userId",
-    // 'ExpressionAttributeValues' defines the value in the condition
-    // - ':userId': defines 'userId' to be the id of the author
-    ExpressionAttributeValues: {
-      ":userId": event.requestContext.authorizer.iam.cognitoIdentity.identityId,
-    },
+    IndexName: "userId-index",
+    KeyConditionExpression,
+    FilterExpression,
+    ExpressionAttributeValues,
+    ExpressionAttributeNames,
   };
 
   const result = await dynamoDb.query(params);
 
-  // Return the matching list of items in response body
+  if (!result.Items) {
+    throw new Error("Items not found.");
+  }
+
   return result.Items;
 });
