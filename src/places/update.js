@@ -1,28 +1,44 @@
 import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
+import getPlaceId from "./repository/getPlaceId";
+import getPlaceByName from "./repository/getPlaceByName";
+import moment from "moment";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    // 'Key' defines the partition key and sort key of the item to be updated
-    Key: {
-      userId: event.requestContext.authorizer.iam.cognitoIdentity.identityId, // The id of the author
-      placeId: event.pathParameters.id, // The id of the note from the path
-    },
-    // 'UpdateExpression' defines the attributes to be updated
-    // 'ExpressionAttributeValues' defines the value in the update expression
-    UpdateExpression: "SET placeName = :placeName",
-    ExpressionAttributeValues: {
-      ":placeName": data.placeName || null,
-    },
-    // 'ReturnValues' specifies if and how to return the item's attributes,
-    // where ALL_NEW returns all attributes of the item after the update; you
-    // can inspect 'result' below to see how it works with different settings
-    ReturnValues: "ALL_NEW",
+  const placeId = event.pathParameters.id
+  const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
+  const oldPlace = await getPlaceId(userId, placeId);
+
+  if (!oldPlace) {
+    throw new Error("Item not found.");
+  }
+
+  const placeName = data.name.toLowerCase();
+  const placesWithSameName = await getPlaceByName( userId, placeName );
+
+  if ( placesWithSameName && placesWithSameName.length > 0 ){
+    if (placesWithSameName.length === 1 && placesWithSameName[0].placeId !== placeId) {
+      return { error: "PlaceNameAlreadyRegistered", message: `The name ${placeName} is already registered` };
+    }
+  }
+
+  const updateItem = {
+    ...oldPlace,
+    ...data,
+    updatedAt: moment().utc().format()
   };
 
-  await dynamoDb.update(params);
+  const params = {
+    TableName: process.env.TABLE_NAME,
+    Key: {
+      userId: userId,
+      placeId: placeId,
+    },
+    Item: updateItem
+  };
+
+  await dynamoDb.put(params);
 
   return { status: true };
 });
