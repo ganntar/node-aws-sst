@@ -1,6 +1,6 @@
 //import * as iam from "@aws-cdk/aws-iam";
 import * as sst from "@serverless-stack/resources";
-import * as iam from "@aws-cdk/aws-iam";
+//import * as iam from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 import { VerificationEmailStyle } from '@aws-cdk/aws-cognito';
 
@@ -11,7 +11,7 @@ export default class AuthStack extends sst.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { api } = props;
+    const { place, room } = props;
 
     // Create a Cognito User Pool and Identity Pool
     this.auth = new sst.Auth(this, "Auth", {
@@ -33,15 +33,16 @@ export default class AuthStack extends sst.Stack {
 
     this.auth.attachPermissionsForAuthUsers([
       // Allow access to the API
-      api,
+      place,
+      room,
       // Policy granting access to a specific folder in the bucket
-      new iam.PolicyStatement({
-        actions: ["s3:*"],
-        effect: iam.Effect.ALLOW,
-        resources: [
-          bucket.bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
-        ],
-      }),
+      // new iam.PolicyStatement({
+      //   actions: ["s3:*"],
+      //   effect: iam.Effect.ALLOW,
+      //   resources: [
+      //     bucket.bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
+      //   ],
+      // }),
     ]);
 
     // Show the auth resources in the output
