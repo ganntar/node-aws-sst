@@ -1,25 +1,9 @@
 import handler from "../util/handler";
-import dynamoDb from "../util/dynamodb";
+import getPlaceId from "./repository/getPlaceId";
 
 export const main = handler(async (event) => {
-  const filterExpression = "status <> :sts";
-  const expressionAttributeValues = {
-    ":sts": "deleted",
-  };
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    FilterExpression: filterExpression,
-    ExpressionAttributeValues: expressionAttributeValues,
-    Key: {
-      userId: event.requestContext.authorizer.iam.cognitoIdentity.identityId,
-      placeId: event.pathParameters.id,
-    },
-  };
+  const placeId = event.pathParameters.id
+  const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
 
-  const result = await dynamoDb.get(params);
-  if (!result.Item) {
-    throw new Error("Item not found.");
-  }
-
-  return result.Item;
+  return await getPlaceId(userId, placeId);
 });

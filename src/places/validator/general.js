@@ -17,7 +17,7 @@ export default function validatePlace(place) {
     for (const {message} of errors) {
       stackErrors += message + '; ';
     }
-    throw new Error(stackErrors);
+    return { statusCode: 400, message: stackErrors };
   }
 
   return place;

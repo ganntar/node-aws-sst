@@ -17,6 +17,9 @@ export default class StorageStack extends sst.Stack {
         placeId: sst.TableFieldType.STRING,
       },
       primaryIndex: { partitionKey: "userId", sortKey: "placeId" },
+      globalIndexes: {
+        userIdIndex: { partitionKey: "userId" },
+      },
     });
 
     this.roomTable = new sst.Table(this, 'RoomTable', {

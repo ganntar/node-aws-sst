@@ -16,7 +16,7 @@ export const main = handler(async (event) => {
 
   const params = {
     TableName: process.env.TABLE_NAME,
-    IndexName: "userId-index",
+    IndexName: "userIdIndex",
     KeyConditionExpression,
     FilterExpression,
     ExpressionAttributeValues,

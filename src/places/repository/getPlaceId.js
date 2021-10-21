@@ -18,5 +18,9 @@ export default async function getPlaceId(userId, placeId) {
   
   const result = await dynamoDb.get(params);
 
+  if (!result.Item) {
+    return { statusCode: 400, message: 'Item not found' };
+  }
+
   return result.Item;
 }

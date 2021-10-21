@@ -14,7 +14,7 @@ export const main = handler(async (event) => {
   
   if ( placesWithSameName && placesWithSameName.length > 0 ){
     if (placesWithSameName.length === 1 && placesWithSameName[0].placeId !== placeId) {
-      return { error: "PlaceNameAlreadyRegistered", message: `The name ${placeName} is already registered` };
+      return { statusCode: 409, error: "PlaceNameAlreadyRegistered", message: `The name ${placeName} is already registered` };
     }
   }
 
@@ -30,7 +30,11 @@ export const main = handler(async (event) => {
     updatedAt: moment().utc().format(),
   }
 
-  validatePlace(place);
+  const validated = validatePlace(place);
+
+  if (validated.message) {
+    return validated;
+  }
   
   const params = {
     TableName: process.env.TABLE_NAME,
