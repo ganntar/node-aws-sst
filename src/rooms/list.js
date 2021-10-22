@@ -3,7 +3,8 @@ import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
   const KeyConditionExpression = "userId = :uid";
-  const filters = event.pathParameters.filters;
+  console.log(event);
+  //const filters = event.pathParameters.filters;
 
   let FilterExpression = "#rooms_status <> :sts AND #placeId = :placeId";
   const ExpressionAttributeNames = {
@@ -17,13 +18,13 @@ export const main = handler(async (event) => {
   ":placeId": event.pathParameters.placeid
   };
 
-  if (filters) {
-    //const { name } = filters;
-      FilterExpression += " AND #room_name = :room_name";
-      ExpressionAttributeNames["#room_name"] = "name";
-      ExpressionAttributeValues[":room_name"] = filters.toLowerCase();
-  }
-  console.log('Filters>>>>>>',filters)
+  // if (filters) {
+  //   //const { name } = filters;
+  //     FilterExpression += " AND #room_name = :room_name";
+  //     ExpressionAttributeNames["#room_name"] = "name";
+  //     ExpressionAttributeValues[":room_name"] = filters.toLowerCase();
+  // }
+  // console.log('Filters>>>>>>',filters)
   const params = {
     TableName: process.env.TABLE_NAME,
     KeyConditionExpression,
