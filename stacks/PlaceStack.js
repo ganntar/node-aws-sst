@@ -8,7 +8,7 @@ export default class PlaceStack extends sst.Stack {
 
     const { table } = props;
 
-    this.api = new sst.Api(this, "Api", {
+    this.api = new sst.Api(this, "api", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
         environment: { TABLE_NAME: table.tableName },

@@ -8,7 +8,7 @@ export default class RoomStack extends sst.Stack {
 
     const { table } = props;
 
-    this.api = new sst.Api(this, "Api", {
+    this.api = new sst.Api(this, "api", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
         environment: { TABLE_NAME: table.tableName },
@@ -16,8 +16,8 @@ export default class RoomStack extends sst.Stack {
       cors: true,
       routes: {
         "POST   /rooms": "src/rooms/create.main",
-        // "GET    /places/{id}": "src/places/get.main",
-        // "GET    /places": "src/places/list.main",
+        "GET    /rooms/{id}": "src/rooms/get.main",
+        "GET    /rooms/list/{placeid}/{filters}": "src/rooms/list.main",
         // "PUT    /places/{id}": "src/places/update.main",
         // "DELETE /places/{id}": "src/places/delete.main",
       },
