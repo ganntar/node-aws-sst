@@ -8,7 +8,7 @@ export default class RoomStack extends sst.Stack {
 
     const { table } = props;
 
-    this.api = new sst.Api(this, "roomApi", {
+    this.api = new sst.Api(this, "roomsApi", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
         environment: { TABLE_NAME: table.tableName },
