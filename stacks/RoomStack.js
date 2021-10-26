@@ -18,8 +18,8 @@ export default class RoomStack extends sst.Stack {
         "POST   /rooms": "src/rooms/create.main",
         "GET    /rooms/{id}": "src/rooms/get.main",
         "GET    /rooms/list/{placeid}": "src/rooms/list.main",
-        // "PUT    /places/{id}": "src/places/update.main",
-        // "DELETE /places/{id}": "src/places/delete.main",
+        "PUT    /rooms/{id}": "src/rooms/update.main",
+        "DELETE /rooms/{id}": "src/rooms/delete.main",
       },
     });
 
