@@ -1,20 +1,17 @@
-import PlaceStorageStack from "./storages/PlaceStorageStack";
-import RoomStorageStack from "./storages/RoomStorageStack";
+import StorageStack from "./storages/StorageStack";
 import PlaceStack from "./PlaceStack";
 import RoomStack from "./RoomStack";
 import AuthStack from "./AuthStack";
 
 export default function main(app) {
-  const placeStorageStack = new PlaceStorageStack(app, "placeStorage");
+  const storageStack = new StorageStack(app, "storage");
 
   const placeStack = new PlaceStack(app, "placesApi", {
-    table: placeStorageStack.placeTable,
+    table: storageStack.placeTable,
   });
 
-  const roomStorageStack = new RoomStorageStack(app, "roomStorage");
-
   const roomStack = new RoomStack(app, "roomsApi", {
-    table: roomStorageStack.roomTable,
+    table: storageStack.roomTable,
   });
   
   new AuthStack(app, "auth", {
