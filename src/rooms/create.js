@@ -5,6 +5,7 @@ import moment from "moment";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
+  console.log(data);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const roomId = uuidv4();
   const { name, picture } = data;
