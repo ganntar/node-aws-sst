@@ -1,47 +1,30 @@
-import dynamoDb from "../util/dynamodb";
+import dynamoDb from "../../util/dynamodb";
 
-export default async function getPlaceByName(userId, placeId, searchName, oldRoomId=false) {
-  const KeyConditionExpression = "userId = :uid";
-  let FilterExpression = "#rooms_status <> :sts and #room_name = :roomName";
+export default async function getRoomsByName(userId, roomName) {
+  const keyConditionExpression = "userId = :uid";
+  const filterExpression = "#room_status <> :sts AND #room_name = :nam";
 
-  const ExpressionAttributeNames = {
-    "#rooms_status": "status",
+  const expressionAttributeNames = {
+    "#room_status": "status",
     "#room_name": "name"
   };
 
-  const ExpressionAttributeValues = {
+  const expressionAttributeValues = {
     ":uid": userId,
     ":sts": "deleted",
-    ":roomName": searchName,
+    ":nam": roomName
   };
 
-  if (placeId) {
-    FilterExpression += " AND #placeId = :placeId";
-    ExpressionAttributeNames["#placeId"] = "placeId";
-    ExpressionAttributeValues[":placeId"] = placeId;
-  }
+  const params = {
+    TableName: process.env.TABLE_NAME,
+    KeyConditionExpression: keyConditionExpression,
+    FilterExpression: filterExpression,
+    ExpressionAttributeValues: expressionAttributeValues,
+    ExpressionAttributeNames: expressionAttributeNames,
+    Key: { userId: userId }
+  };
 
-  if (oldRoomId){
-    FilterExpression += " AND #roomId <> :roomId";
-    ExpressionAttributeNames["#roomId"] = "roomId";
-    ExpressionAttributeValues[":roomId"] = oldRoomId;
-  }
+  const result = await dynamoDb.query(params);
 
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: {
-        KeyConditionExpression,
-        FilterExpression,
-        ExpressionAttributeValues,
-        ExpressionAttributeNames,
-      },
-    };
-
-    const result = await dynamoDb.get(params);
-
-    if (!result.Item) {
-      return { statusCode: 400, message: 'Item not found' };
-    }
-
-    return result.Item;
+  return result.Items;
 }

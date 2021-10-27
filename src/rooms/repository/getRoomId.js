@@ -11,7 +11,7 @@ export default async function getRoomId(userId, roomId) {
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
     Key: {
-      placeId: roomId,
+      roomId: roomId,
       userId: userId,
     },
   };

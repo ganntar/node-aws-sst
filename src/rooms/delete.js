@@ -14,6 +14,7 @@ export const main = handler(async (event) => {
     updatedAt: moment().utc().format()
   };
 
+
   const params = {
     TableName: process.env.TABLE_NAME,
     Key: {
@@ -22,6 +23,8 @@ export const main = handler(async (event) => {
     },
     Item: updateItem
   };
+
+
 
   await dynamoDb.put(params);
 

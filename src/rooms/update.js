@@ -1,6 +1,7 @@
 import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
 import getRoomId from "./repository/getRoomId";
+import getRoomsByName from "./repository/getRoomsByName";
 import moment from "moment";
 
 export const main = handler(async (event) => {
@@ -25,23 +26,22 @@ export const main = handler(async (event) => {
     throw new Error("The name must contain a maximum of 30 characters.");
   }
 
-  if (name === oldRoom.Item.name && picture === oldRoom.Item.picture) {
+  if (name === oldRoom.name && picture === oldRoom.picture) {
     throw new Error("No registry modification found");
   }
 
-  const roomsWithSameName = await this._roomRepository.getRoomsByName(userId, oldRoom.Item.placeId, formatedRoomName, oldRoom.Item.roomId);
+  const roomsWithSameName = await getRoomsByName(userId, formatedRoomName);
 
   if (roomsWithSameName.length > 0) {
     throw new Error("Name is already in use.");
   }
-
+  
   const updateItem = {
-    ...oldRoom.Item,
+    ...oldRoom,
     name: formatedRoomName,
     picture,
     updatedAt: moment().utc().format()
   }
-  
 
   const params = {
     TableName: process.env.TABLE_NAME,
@@ -54,5 +54,5 @@ export const main = handler(async (event) => {
 
   await dynamoDb.put(params);
 
-  return params.Item;
+  return params;
 })
