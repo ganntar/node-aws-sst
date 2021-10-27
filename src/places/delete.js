@@ -2,28 +2,31 @@ import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
 import moment from "moment";
 import getPlaceId from "./repository/getPlaceId";
+import putRoomFromPlaceId from "./repository/putRoomFromPlaceId";
 
 export const main = handler(async (event) => {
   const placeId = event.pathParameters.id
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const place = await getPlaceId(userId, placeId);
 
+  const updatedAt = moment().utc().format();
+
   const updateItem = {
     ...place,
     status: 'deleted',
-    updatedAt: moment().utc().format()
+    updatedAt
   };
 
-  const params = {
+  const placeParams = {
     TableName: process.env.TABLE_NAME,
     Key: {
-      userId: userId,
-      placeId: placeId,
+      userId,
+      placeId,
     },
     Item: updateItem
   };
+  
+  await dynamoDb.put(placeParams);
 
-  await dynamoDb.put(params);
-
-  return { status: true };
+  return await putRoomFromPlaceId(userId, placeId);
 });

@@ -6,12 +6,14 @@ export default class PlaceStack extends sst.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { table } = props;
+    const { table, roomTable } = props;
 
     this.api = new sst.Api(this, "placesApi", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
-        environment: { TABLE_NAME: table.tableName },
+        environment: { 
+          TABLE_NAME: table.tableName, 
+          ROOM_TABLE: roomTable.tableName },
       },
       cors: true,
       routes: {
@@ -25,6 +27,8 @@ export default class PlaceStack extends sst.Stack {
 
     // Allow the API to access the table
     this.api.attachPermissions([table]);
+
+    this.api.attachPermissions([roomTable]);
 
     // Show the API endpoint in the output
     this.addOutputs({
