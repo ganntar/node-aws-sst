@@ -27,6 +27,7 @@ export const main = handler(async (event) => {
   const updateItem = {
     ...oldPlace,
     ...data,
+    name: placeName,
     updatedAt: moment().utc().format()
   };
 
@@ -39,8 +40,8 @@ export const main = handler(async (event) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Key: {
-      userId: userId,
-      placeId: placeId,
+      userId,
+      placeId,
     },
     Item: updateItem
   };

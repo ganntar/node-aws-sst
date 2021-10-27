@@ -6,9 +6,9 @@ import getPlaceByName from "./repository/getPlaceByName";
 import validatePlace from "./validator/general";
 
 export const main = handler(async (event) => {
-  const data = JSON.parse(event.body);
+  const { name, devices, picture, status, typePeople } = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const placeName = data.name.toLowerCase();
+  const placeName = name.toLowerCase();
   const placeId = uuidv4();
   const placesWithSameName = await getPlaceByName( userId, placeName );
   
@@ -18,16 +18,18 @@ export const main = handler(async (event) => {
     }
   }
 
+  const momentAt = moment().utc().format()
+
   const place = {
-    userId: userId,
-    placeId: placeId,
+    userId,
+    placeId,
     name: placeName,
-    devices: data.devices || [],
-    picture: data.picture,
-    status: data.status,
-    typePeople: data.typePeople,
-    createdAt: moment().utc().format(),
-    updatedAt: moment().utc().format(),
+    devices: devices || [],
+    picture,
+    status,
+    typePeople,
+    createdAt: momentAt,
+    updatedAt: momentAt,
   }
 
   const validated = validatePlace(place);

@@ -11,8 +11,8 @@ export default async function getPlaceId(userId, placeId) {
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
     Key: {
-      placeId: placeId,
-      userId: userId,
+      placeId,
+      userId,
     },
   };
   
