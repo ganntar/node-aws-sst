@@ -3,8 +3,9 @@ import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
   const KeyConditionExpression = "userId = :uid";
-  console.log(event);
-  //const filters = event.pathParameters.filters;
+
+  const {placeId, filters} = event.queryStringParameters;
+
 
   let FilterExpression = "#rooms_status <> :sts AND #placeId = :placeId";
   const ExpressionAttributeNames = {
@@ -15,16 +16,16 @@ export const main = handler(async (event) => {
   const ExpressionAttributeValues = {
   ":uid":  event.requestContext.authorizer.iam.cognitoIdentity.identityId,
   ":sts": "deleted",
-  ":placeId": event.pathParameters.placeid
+  ":placeId": placeId
   };
 
-  // if (filters) {
-  //   //const { name } = filters;
-  //     FilterExpression += " AND #room_name = :room_name";
-  //     ExpressionAttributeNames["#room_name"] = "name";
-  //     ExpressionAttributeValues[":room_name"] = filters.toLowerCase();
-  // }
-  // console.log('Filters>>>>>>',filters)
+  if (filters) {
+    //const { name } = filters;
+      FilterExpression += " AND #room_name = :room_name";
+      ExpressionAttributeNames["#room_name"] = "name";
+      ExpressionAttributeValues[":room_name"] = filters.toLowerCase();
+  }
+
   const params = {
     TableName: process.env.TABLE_NAME,
     KeyConditionExpression,

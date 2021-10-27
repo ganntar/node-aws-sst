@@ -17,9 +17,10 @@ export default class RoomStack extends sst.Stack {
       routes: {
         "POST   /rooms": "src/rooms/create.main",
         "GET    /rooms/{id}": "src/rooms/get.main",
-        "GET    /rooms/list/{placeid}": "src/rooms/list.main",
+        "GET    /rooms": "src/rooms/list.main",
         "PUT    /rooms/{id}": "src/rooms/update.main",
         "DELETE /rooms/{id}": "src/rooms/delete.main",
+        "PUT    /rooms/{roomId}/assign/{placeId}": "src/rooms/assign.main",
       },
     });
 
