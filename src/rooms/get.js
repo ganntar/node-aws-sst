@@ -6,7 +6,7 @@ export const main = handler(async (event) => {
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
 
     const params = {
-      TableName: process.env.TABLE_NAME,
+      TableName: process.env.ROOM_TABLE,
       Key: {
         roomId: roomId,
         userId: userId,

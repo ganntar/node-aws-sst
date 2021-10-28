@@ -7,7 +7,7 @@ export default async function getRoomId(userId, roomId) {
   };
 
   const params = {
-    TableName: process.env.TABLE_NAME,
+    TableName: process.env.ROOM_TABLE,
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
     Key: {

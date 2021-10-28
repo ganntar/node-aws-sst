@@ -38,7 +38,7 @@ export const main = handler(async (event) => {
   }
 
   const params = {
-    TableName: process.env.TABLE_NAME,
+    TableName: process.env.PLACE_TABLE,
     Key: {
       userId,
       placeId,

@@ -7,7 +7,7 @@ export default async function getPlaceId(userId, placeId) {
   };
 
   const params = {
-    TableName: process.env.TABLE_NAME,
+    TableName: process.env.PLACE_TABLE,
     FilterExpression: filterExpression,
     ExpressionAttributeValues: expressionAttributeValues,
     Key: {

@@ -17,7 +17,7 @@ export default async function getPlaceByName(userId, placeName) {
   };
 
   const params = {
-    TableName: process.env.TABLE_NAME,
+    TableName: process.env.PLACE_TABLE,
     IndexName: "userIdIndex",
     KeyConditionExpression: keyConditionExpression,
     FilterExpression: filterExpression,
