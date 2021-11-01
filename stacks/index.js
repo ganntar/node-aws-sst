@@ -8,6 +8,7 @@ export default function main(app) {
   const apiStack = new ApiStack(app, "Api", {
     placeTable: storageStack.placeTable,
     roomTable: storageStack.roomTable,
+    deviceTable: storageStack.deviceTable,
   });
   
   new AuthStack(app, "auth", {

@@ -5,6 +5,7 @@ import * as cdk from '@aws-cdk/core';
 export default class StorageStack extends sst.Stack {
   placeTable;
   roomTable;
+  deviceTable;
 
   constructor(scope, id, props) {
     super(scope, id, props);
@@ -30,6 +31,16 @@ export default class StorageStack extends sst.Stack {
         userId: sst.TableFieldType.STRING,
       },
       primaryIndex: { partitionKey: "userId", sortKey: "roomId" },
+    });
+
+    this.deviceTable = new sst.Table(this, 'DevicesTable', {
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      fields: {
+        modelNumber: sst.TableFieldType.STRING,
+        deviceType: sst.TableFieldType.STRING,
+      },
+      primaryIndex: { partitionKey: "modelNumber", sortKey: "deviceType" },
     });
   }
 }

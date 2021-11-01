@@ -1,19 +1,19 @@
 import * as sst from "@serverless-stack/resources";
 
-export default class PlaceStack extends sst.Stack {
+export default class ApiStack extends sst.Stack {
   api;
 
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { placeTable, roomTable } = props;
-
+    const { placeTable, roomTable, deviceTable } = props;
     this.api = new sst.Api(this, "api", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
         environment: { 
           PLACE_TABLE: placeTable.tableName, 
-          ROOM_TABLE: roomTable.tableName },
+          ROOM_TABLE: roomTable.tableName,
+          DEVICE_TABLE: deviceTable.tableName},
       },
       cors: true,
     });
@@ -37,10 +37,21 @@ export default class PlaceStack extends sst.Stack {
       "PUT    /rooms/{roomId}/assign/{placeId}": "src/rooms/assign.main"
     });
 
+    //DEVICES ROUTES
+    this.api.addRoutes(this, {
+      "POST   /devices": "src/devices/create.main",
+      // "GET    /devices/{id}": "src/devices/get.main",
+      // "GET    /devices": "src/devices/list.main",
+      // "PUT    /devices/{id}": "src/devices/update.main",
+      // "DELETE /devices/{id}": "src/devices/delete.main",
+    });
+
     // Allow the API to access the table
     this.api.attachPermissions([placeTable]);
 
     this.api.attachPermissions([roomTable]);
+
+    this.api.attachPermissions([deviceTable]);
 
     // Show the API endpoint in the output
     this.addOutputs({
