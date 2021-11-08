@@ -6,6 +6,7 @@ export default class StorageStack extends sst.Stack {
   placeTable;
   roomTable;
   deviceTable;
+  registrationTable;
 
   constructor(scope, id, props) {
     super(scope, id, props);
@@ -33,7 +34,7 @@ export default class StorageStack extends sst.Stack {
       primaryIndex: { partitionKey: "userId", sortKey: "roomId" },
     });
 
-    this.deviceTable = new sst.Table(this, 'DevicesTable', {
+    this.deviceTable = new sst.Table(this, 'DevicesModelTable', {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       fields: {
@@ -41,6 +42,19 @@ export default class StorageStack extends sst.Stack {
         deviceType: sst.TableFieldType.STRING,
       },
       primaryIndex: { partitionKey: "modelNumber", sortKey: "deviceType" },
+    });
+    
+    this.registrationTable = new sst.Table(this, 'RegistrationsTable', {
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      fields: {
+        roomId: sst.TableFieldType.STRING,
+        deviceId: sst.TableFieldType.STRING,
+      },
+      primaryIndex: { partitionKey: "deviceId", sortKey: "manufacturer" },
+      globalIndexes: {
+        deviceIdIndex: { partitionKey: "deviceId" },
+      },
     });
   }
 }

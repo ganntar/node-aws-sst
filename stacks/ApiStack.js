@@ -6,14 +6,15 @@ export default class ApiStack extends sst.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { placeTable, roomTable, deviceTable } = props;
+    const { placeTable, roomTable, deviceTable, registrationTable } = props;
     this.api = new sst.Api(this, "api", {
       defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
         environment: { 
           PLACE_TABLE: placeTable.tableName, 
           ROOM_TABLE: roomTable.tableName,
-          DEVICE_TABLE: deviceTable.tableName},
+          DEVICE_TABLE: deviceTable.tableName,
+          REGISTRATION_TABLE: registrationTable.tableName},
       },
       cors: true,
     });
@@ -46,12 +47,23 @@ export default class ApiStack extends sst.Stack {
       // "DELETE /devices/{id}": "src/devices/delete.main",
     });
 
+    //REGISTRATION ROUTES
+    this.api.addRoutes(this, {
+      "POST   /registration": "src/registration/create.main",
+      // "GET    /devices/{id}": "src/devices/get.main",
+      // "GET    /devices": "src/devices/list.main",
+      // "PUT    /devices/{id}": "src/devices/update.main",
+      // "DELETE /devices/{id}": "src/devices/delete.main",
+    });
+
     // Allow the API to access the table
     this.api.attachPermissions([placeTable]);
 
     this.api.attachPermissions([roomTable]);
 
     this.api.attachPermissions([deviceTable]);
+
+    this.api.attachPermissions([registrationTable]);
 
     // Show the API endpoint in the output
     this.addOutputs({

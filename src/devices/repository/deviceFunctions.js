@@ -1,7 +1,6 @@
 import dynamoDb from "../../util/dynamodb";
 
-
-export const getDevicesAccess = (userId, placeId) => {
+exports.getDevicesAccess = async (userId, placeId) => {
   const KeyConditionExpression = 'userId = :userId'
   let FilterExpression = '#placeId = :placeId'
   const ExpressionAttributeNames = {
@@ -14,7 +13,7 @@ export const getDevicesAccess = (userId, placeId) => {
   }
 
   const params = {
-    TableName: process.env.DEVICE_ACCESS_TBL,
+    TableName: process.env.DEVICE_TABLE,
     KeyConditionExpression,
     ExpressionAttributeValues,
     FilterExpression,

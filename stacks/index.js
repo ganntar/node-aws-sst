@@ -9,9 +9,13 @@ export default function main(app) {
     placeTable: storageStack.placeTable,
     roomTable: storageStack.roomTable,
     deviceTable: storageStack.deviceTable,
+    registrationTable: storageStack.registrationTable,
   });
   
   new AuthStack(app, "auth", {
     api: apiStack.api,
+    place: apiStack.api,
+    room: apiStack.api,
+    registration: apiStack.api
   });
 }
